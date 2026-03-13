@@ -14,12 +14,17 @@ app.use(express.json());
 
 // --- Rutas ---
 app.use('/api/users', userRoutes);
-
 app.get('/', (req, res) => {
-  res.json({
-    status: "success", // Corregido el typo
-    msg: "server ok"
-  });
+  res.send(`
+    <html>
+      <head>
+        <title>Mi Servidor</title>
+      </head>
+      <body style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif;">
+        <h2 style="color: #2c3e50;">🚀 Server OK</h2>
+      </body>
+    </html>
+  `);
 });
 
 // --- Inicio del Servidor ---
