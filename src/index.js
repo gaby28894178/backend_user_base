@@ -25,5 +25,10 @@ const startServer = async () => {
 };
 
 app.use('/api/users', userRoutes);
+app.use('/',(req,res)=>{
+    res.send({
+        msg:"server ok "
+    })
+})
 
 startServer();
