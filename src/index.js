@@ -7,29 +7,37 @@ import userRoutes from './routes/userRoutes.js';
 
 const app = express();
 
+// --- Middlewares ---
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-// Sincronizar modelos y conectar DB
-const startServer = async () => {
-  await testConnection();
-  // sync({ force: false }) crea las tablas si no existen
-  await sequelize.sync({ force: false });
-  console.log("✅ Modelos sincronizados");
-  
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-  });
-};
-
+// --- Rutas ---
 app.use('/api/users', userRoutes);
-app.get('/',(req,res)=>{
-    res.json({
-        status:"succes",
-        msg:"server ok "
-    })
-})
+
+app.get('/', (req, res) => {
+  res.json({
+    status: "success", // Corregido el typo
+    msg: "server ok"
+  });
+});
+
+// --- Inicio del Servidor ---
+const startServer = async () => {
+  try {
+    // Validar conexión y sincronizar
+    await testConnection();
+    await sequelize.sync({ force: false });
+    console.log("✅ Base de datos conectada y modelos sincronizados");
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Error al iniciar el servidor:", error.message);
+    process.exit(1); // Cerramos el proceso si la DB falla
+  }
+};
 
 startServer();
